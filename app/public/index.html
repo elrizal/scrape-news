@@ -6,7 +6,6 @@
     <title>Scrape-News</title>
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-
 </head>
 
 <body>
@@ -17,8 +16,12 @@
 
                     <ul class="left hide-on-med-and-down">
                         <li>
-                            <li class="active"><a href="index.html">Home</a></li>
-                            <li><a href="saved.html">Saved Articles</a></li>
+                            <li class="active">
+                                <a href="index.html">Home</a>
+                            </li>
+                            <li>
+                                <a href="saved.html">Saved Articles</a>
+                            </li>
 
                             <li>
                                 <li>
@@ -32,20 +35,52 @@
 
 
         <div class="parallax-container " style="max-height: 350px; ">
-            <div class="parallax "><img src="img/bg.jpeg " style="width: 50%; "></div>
+            <div class="parallax ">
+                <img src="img/bg.jpeg " style="width: 50%; ">
+            </div>
             <div class="container " style="color: white ">
                 <h1>NEWS SCRAPPER</h1>
             </div>
         </div>
 
         <div class="container ">
-            <div class="card " style="padding: 10px; ">test</div>
+            <div class="card " style="padding: 10px; ">
+
+                <div id="articles"></div>
+                <a class="waves-effect waves-light btn modal-trigger" href="#modal2">Make a note</a>
+
+            </div>
         </div>
 
-
         <!-- Modal Structure -->
-        <div id="modal1" class="modal" style="color: gray;">
-            <div class="modal-content">
+        <div id="modal1" class="modal">
+            <div class="modal-content" style="color: gray ">
+                <h3>You added articles!</h3>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">close</a>
+            </div>
+        </div>
+
+        <!-- Modal Notes Structure -->
+        <div id="modal2" class="modal">
+            <div class="modal-content" style="color: gray;">
+                <div id="userinput">
+
+                    <input type="text" id="title" placeholder="TITLE" />
+                    <br>
+                    <h5>Notes</h5>
+                    <textarea id="note"></textarea>
+                    <div id="buttons">
+                        <div id="actionbutton">
+                            <button id="makenew" class="waves-effect waves-light btn">Submit</button>
+
+                        </div>
+                        <button id="clearall" class="waves-effect waves-light btn">Delete All Notes</button>
+                        <div id="results"></div>
+                    </div>
+                </div>
+
 
             </div>
             <div class="modal-footer">
@@ -53,11 +88,10 @@
             </div>
         </div>
 
-
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js "></script>
-        <script src="javascript/extra.js "></script>
+        <script src="javascript/add-articles.js "></script>
+        <script src="javascript/notes.js "></script>
         <script src="javascript/materialize.js "></script>
-
 </body>
 
 </html>
