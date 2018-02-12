@@ -28,7 +28,7 @@ app.get("/all", function(req, res) {
 
         $("h3.featured-headline").each(function(i, element) {
             var result = [];
-            console.log("===========================");
+
             console.log(element);
             console.log("===========================***");
             for (var i=0; i < response.length; i++){
