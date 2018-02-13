@@ -6,17 +6,13 @@
          $('.modal').modal();
          var modalContent = $('.modal-content');
          $("#articles").append("text").css("color", "gray");
-
          console.log("-------");
 
          $.getJSON("/all", function(element, result){
-       
-             console.log("result");
+             
             for (var i = 0; i < element.length; i++) {
-
                 $("#articles").append(element[i].children.data);
             }
         })
-        
     });
  });

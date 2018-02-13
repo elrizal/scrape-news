@@ -2,13 +2,16 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var exHandlebars = require("express-handlebars")
 var mongoose = require("mongoose");
+var logger = require("morgan");
 
 var cheerio = require("cheerio");
 var axios = require("axios");
+
 var db = require("./app/models");
 var app = express();
 var PORT = process.env.PORT || 3040;
 
+app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static("app/public"));
@@ -19,39 +22,44 @@ mongoose.connect("mongodb://localhost/app", {
 });
 console.log("\n***********************************\n");
 // =============================================================
-app.get("/all", function(req, res) {
 
-    console.log("made it to scrape");
-    axios.get("https://www.theonion.com/").then(function(response) {
-
-        var $ = cheerio.load(response.data);
+// app.get("/all", function(req, res) {
+//     db.scrapedData.find({}, function(error, found) {
+//       if (error) {
+//         console.log(error);
+//       }
+//       else {
+//         res.json(found);
+//       }
+//     });
+//   });
+app.get("/scrape", function(req, res) {
+    // First, we grab the body of the html with request
+    axios.get("http://www.theonion.com/").then(function(response) {
+ 
+    var $ = cheerio.load(response.data);
 
         $("h3.featured-headline").each(function(i, element) {
-            var result = [];
+            var result = {};
 
-            console.log(element);
-            console.log("===========================***");
-            for (var i=0; i < response.length; i++){
-                result.push(response[i].result)
-            } 
-            console.log(result);
-            console.log("===========================");
-          
+            // Add the text and href of every link, and save them as properties of the result object
             result.title = $(this)
-                .children("a")
-                .text();
+              .children("a")
+              .text();
             result.link = $(this)
-                .children("a")
-                .attr("href");
-          
-            console.log(result);
-                    if (error) {
-                      console.log(error);
-                    }
-                    else {
-                      res.json(found);
-                    }
-                  });
+              .children("a")
+              .attr("href");
+
+            console.log("===========================***");
+ 
+        //    var articleTitle= $(this)
+        //         .children("a")
+        //         .text();
+        //     var articleLink = $(this)
+        //         .children("a")
+        //         .attr("href");
+        //   var articleData = {}; 
+
 
             db.Article.create(result)
                 .then(function(dbArticle) {
@@ -87,16 +95,14 @@ app.get("/articles/:id", function(req, res) {
         .catch(function(err) {
             res.json(err);
         });
+    });
 });
 
 // Route for saving/updating an Article's associated Note
 app.post("/articles/:id", function(req, res) {
-    // Create a new note and pass the req.body to the entry
+
     db.Note.create(req.body)
         .then(function(dbNote) {
-            // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
-            // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
-            // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
             return db.Article.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
         }).then(function(dbArticle) {
             res.json(dbArticle);

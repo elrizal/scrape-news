@@ -1,4 +1,3 @@
-// Dependencies
 var express = require("express");
 var mongojs = require("mongojs");
 var bodyParser = require("body-parser");
@@ -13,14 +12,10 @@ app.use(
 );
 app.use(express.static("public"));
 
-// Database configuration
 var databaseUrl = "notetaker";
 var collections = ["notes"];
 
-// Hook mongojs config to db variable
 var db = mongojs(databaseUrl, collections);
-
-// Log any mongojs errors to console
 db.on("error", function(error) {
     console.log("Database Error:", error);
 });
@@ -28,26 +23,22 @@ db.on("error", function(error) {
 // Routes
 // ======
 
-// Simple index route
 app.get("/", function(req, res) {
     res.send(index.html);
 });
 
-// Handle form submission, save submission to mongo
 app.post("/submit", function(req, res) {
     console.log(req.body);
     db.notes.insert(req.body, function(error, saved) {
         if (error) {
             console.log(error);
         } else {
-            // Otherwise, send the note back to the browser
-            // This will fire off the success function of the ajax request
             res.send(saved);
         }
     });
 });
 
-// Retrieve results from mongo
+// get results from mongo
 app.get("/all", function(req, res) {
     db.notes.find({}, function(error, found) {
      
@@ -62,7 +53,6 @@ app.get("/all", function(req, res) {
 // Select just one note by an id
 app.get("/find/:id", function(req, res) {
     db.notes.findOne({
-            // Using the id in the url
             _id: mongojs.ObjectId(req.params.id)
         },
         function(error, found) {
